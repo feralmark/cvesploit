@@ -1,7 +1,11 @@
 function fetchDataFromYAML(filename) {
   return fetch(`yaml/${filename}`)
-    .then(response => response.text())
-    .then(text => jsyaml.load(text));
+    .then(response => response.text());
+}
+
+function extractYAML(data) {
+  const yamlContent = data.split('---')[1]; // Extract YAML front matter
+  return jsyaml.load(yamlContent);
 }
 
 function populateTable(data) {
@@ -35,25 +39,23 @@ function populateTable(data) {
 
 const tableHeaderCreated = false; // Flag to check if table header is already created
 
-// Fetch and process YAML files based on multiple naming patterns
-for (let i = 0; i < 10000; i++) { // Assuming the numbers range from 0 to 99999
-  const filenames = [
-    `CVE-${i.toString().padStart(4, '0')}-${i.toString().padStart(5, '0')}.md`, // 4 digits hyphen 5 digits
-    `CVE-${i.toString().padStart(5, '0')}-${i.toString().padStart(4, '0')}.md`, // 5 digits hyphen 4 digits
-  ];
+// Fetch and process all MD files in the YAML folder
+fetch('yaml/')
+  .then(response => response.text())
+  .then(text => {
+    const fileNames = text.match(/href="([^"]+\.md)"/g).map(match => match.split('"')[1]);
 
-  let fetched = false;
-
-  for (const filename of filenames) {
-    fetchDataFromYAML(filename)
-      .then(data => {
-        populateTable(data);
-        fetched = true;
-      })
-      .catch(error => {
-        if (fetched) return; // If already fetched from one pattern, skip errors from the other
-        // Handle errors for both patterns
-        console.error(`Error fetching or processing ${filename}:`, error);
-      });
-  }
-}
+    fileNames.forEach(filename => {
+      fetchDataFromYAML(filename)
+        .then(data => {
+          const yamlData = extractYAML(data);
+          populateTable(yamlData);
+        })
+        .catch(error => {
+          console.error(`Error fetching or processing ${filename}:`, error);
+        });
+    });
+  })
+  .catch(error => {
+    console.error('Error fetching MD files:', error);
+  });
