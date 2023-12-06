@@ -1,8 +1,5 @@
 # cvesploit
 
-Oh shit here i go chasing rabbits down them holes again 
-
-gtfobins for cve's (work in progress)
 
 
 
@@ -34,8 +31,11 @@ gtfobins for cve's (work in progress)
 	<input type="text" id="filter-country" data-filter-col="3">
 </div>
 
+
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
 <script src="filtable.js"></script>
+
 
 $('#mytable').filtable({ controlPanel: $('#table-filters') });
 
