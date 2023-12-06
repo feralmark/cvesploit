@@ -1,40 +1,49 @@
-// Function to fetch and parse YAML files
 function fetchDataFromYAML(filename) {
   return fetch(`yaml/${filename}`)
     .then(response => response.text())
     .then(text => jsyaml.load(text));
 }
 
-// Function to populate the table with YAML data
 function populateTable(data) {
-  const table = document.createElement('table');
-  table.classList.add('myDynamicTable'); // Add a class to differentiate tables
-  const tableBody = document.createElement('tbody');
+  // Create table header if not already created
+  if (!tableHeaderCreated) {
+    const tableHead = document.querySelector('#myTable thead');
+    const headerRow = document.createElement('tr');
 
-  // Loop through each key-value pair in the YAML data
-  Object.keys(data).forEach(key => {
-    const row = document.createElement('tr');
-    const cellKey = document.createElement('td');
-    const cellValue = document.createElement('td');
+    Object.keys(data).forEach(key => {
+      const headerCell = document.createElement('th');
+      headerCell.textContent = key;
+      headerRow.appendChild(headerCell);
+    });
 
-    cellKey.textContent = key;
-    cellValue.textContent = data[key];
+    tableHead.appendChild(headerRow);
+    tableHeaderCreated = true;
+  }
 
-    row.appendChild(cellKey);
-    row.appendChild(cellValue);
-    tableBody.appendChild(row);
+  // Create table row with data
+  const tableBody = document.querySelector('#myTable tbody');
+  const dataRow = document.createElement('tr');
+
+  Object.values(data).forEach(value => {
+    const dataCell = document.createElement('td');
+    dataCell.textContent = value;
+    dataRow.appendChild(dataCell);
   });
 
-  table.appendChild(tableBody);
-  document.body.appendChild(table); // Append table to the document body or another container
+  tableBody.appendChild(dataRow);
 }
 
-// Usage
-fetchDataFromYAML('CVE-####-#####.yaml') // Replace 'CVE-####-#####.yaml' with your YAML file name
-  .then(data => {
-    // Once data is fetched, populate the table
-    populateTable(data['Software/Service']); // Change this key to populate the table as needed
-  })
-  .catch(error => {
-    console.error('Error fetching data:', error);
-  });
+const tableHeaderCreated = false; // Flag to check if table header is already created
+
+// Fetch and process YAML files based on the naming pattern "CVE-####.yaml"
+for (let i = 0; i < 10000; i++) { // Assuming the numbers range from 0 to 9999
+  const filename = `CVE-${i.toString().padStart(4, '0')}.yaml`; // Format the filename
+  fetchDataFromYAML(filename)
+    .then(data => {
+      populateTable(data);
+    })
+    .catch(error => {
+      // Handle errors, such as file not found or other issues
+      console.error(`Error fetching or processing ${filename}:`, error);
+    });
+}
