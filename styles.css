@@ -1,0 +1,18 @@
+/* Add your styles here */
+.search-box {
+  margin: 20px 0;
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#myTable th, #myTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#myTable th {
+  background-color: #f2f2f2;
+}
