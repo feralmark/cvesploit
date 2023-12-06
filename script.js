@@ -7,25 +7,33 @@ function fetchDataFromYAML(filename) {
 
 // Function to populate the table with YAML data
 function populateTable(data) {
-  const tableBody = document.querySelector('#myTable tbody');
-  tableBody.innerHTML = ''; // Clear existing table content
+  const table = document.createElement('table');
+  table.classList.add('myDynamicTable'); // Add a class to differentiate tables
+  const tableBody = document.createElement('tbody');
 
-  data.forEach(row => {
-    const newRow = document.createElement('tr');
-    Object.values(row).forEach(value => {
-      const cell = document.createElement('td');
-      cell.textContent = value;
-      newRow.appendChild(cell);
-    });
-    tableBody.appendChild(newRow);
+  // Loop through each key-value pair in the YAML data
+  Object.keys(data).forEach(key => {
+    const row = document.createElement('tr');
+    const cellKey = document.createElement('td');
+    const cellValue = document.createElement('td');
+
+    cellKey.textContent = key;
+    cellValue.textContent = data[key];
+
+    row.appendChild(cellKey);
+    row.appendChild(cellValue);
+    tableBody.appendChild(row);
   });
+
+  table.appendChild(tableBody);
+  document.body.appendChild(table); // Append table to the document body or another container
 }
 
 // Usage
-fetchDataFromYAML('data1.yaml') // Replace 'data1.yaml' with your YAML file name
+fetchDataFromYAML('CVE-####-#####.yaml') // Replace 'CVE-####-#####.yaml' with your YAML file name
   .then(data => {
     // Once data is fetched, populate the table
-    populateTable(data);
+    populateTable(data['Software/Service']); // Change this key to populate the table as needed
   })
   .catch(error => {
     console.error('Error fetching data:', error);
