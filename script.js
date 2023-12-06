@@ -1,5 +1,5 @@
 function fetchDataFromYAML(filename) {
-  return fetch(`yml/${filename}`)
+  return fetch(`yml/CVE-2017-0144.md`)
     .then(response => response.text());
 }
 
@@ -10,22 +10,10 @@ function extractYAML(data) {
 
 function populateTable(data) {
   // Create table header if not already created
-  if (!tableHeaderCreated) {
-    const tableHead = document.querySelector('#myTable thead');
-    const headerRow = document.createElement('tr');
-
-    Object.keys(data).forEach(key => {
-      const headerCell = document.createElement('th');
-      headerCell.textContent = key;
-      headerRow.appendChild(headerCell);
-    });
-
-    tableHead.appendChild(headerRow);
-    tableHeaderCreated = true;
-  }
-
+  const table = document.getElementById('myTable');
+  const tbody = table.getElementsByTagName('tbody')[0];
+  
   // Create table row with data
-  const tableBody = document.querySelector('#myTable tbody');
   const dataRow = document.createElement('tr');
 
   Object.values(data).forEach(value => {
@@ -34,28 +22,15 @@ function populateTable(data) {
     dataRow.appendChild(dataCell);
   });
 
-  tableBody.appendChild(dataRow);
+  tbody.appendChild(dataRow);
 }
 
-const tableHeaderCreated = false; // Flag to check if table header is already created
-
-// Fetch and process all MD files in the YAML folder
-fetch('yaml/')
-  .then(response => response.text())
-  .then(text => {
-    const fileNames = text.match(/href="([^"]+\.md)"/g).map(match => match.split('"')[1]);
-
-    fileNames.forEach(filename => {
-      fetchDataFromYAML(filename)
-        .then(data => {
-          const yamlData = extractYAML(data);
-          populateTable(yamlData);
-        })
-        .catch(error => {
-          console.error(`Error fetching or processing ${filename}:`, error);
-        });
-    });
+// Fetch a single MD file in the YAML folder
+fetchDataFromYAML()
+  .then(data => {
+    const yamlData = extractYAML(data);
+    populateTable(yamlData);
   })
   .catch(error => {
-    console.error('Error fetching MD files:', error);
+    console.error(`Error fetching or processing ${filename}:`, error);
   });
