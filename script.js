@@ -35,15 +35,25 @@ function populateTable(data) {
 
 const tableHeaderCreated = false; // Flag to check if table header is already created
 
-// Fetch and process YAML files based on the naming pattern "CVE-####.yaml"
-for (let i = 0; i < 10000; i++) { // Assuming the numbers range from 0 to 9999
-  const filename = `CVE-${i.toString().padStart(4, '0')}.yaml`; // Format the filename
-  fetchDataFromYAML(filename)
-    .then(data => {
-      populateTable(data);
-    })
-    .catch(error => {
-      // Handle errors, such as file not found or other issues
-      console.error(`Error fetching or processing ${filename}:`, error);
-    });
+// Fetch and process YAML files based on multiple naming patterns
+for (let i = 0; i < 10000; i++) { // Assuming the numbers range from 0 to 99999
+  const filenames = [
+    `CVE-${i.toString().padStart(4, '0')}-${i.toString().padStart(5, '0')}.md`, // 4 digits hyphen 5 digits
+    `CVE-${i.toString().padStart(5, '0')}-${i.toString().padStart(4, '0')}.md`, // 5 digits hyphen 4 digits
+  ];
+
+  let fetched = false;
+
+  for (const filename of filenames) {
+    fetchDataFromYAML(filename)
+      .then(data => {
+        populateTable(data);
+        fetched = true;
+      })
+      .catch(error => {
+        if (fetched) return; // If already fetched from one pattern, skip errors from the other
+        // Handle errors for both patterns
+        console.error(`Error fetching or processing ${filename}:`, error);
+      });
+  }
 }
