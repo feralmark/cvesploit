@@ -1,5 +1,5 @@
 function fetchDataFromYAML(filename) {
-  return fetch(`yml/CVE-2017-0144.md`)
+  return fetch(`yaml/CVE-2017-0144.md`)
     .then(response => response.text());
 }
 
