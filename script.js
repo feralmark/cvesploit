@@ -1,5 +1,5 @@
 function fetchDataFromYAML(filename) {
-  return fetch(`yml/${filename}`)
+  return fetch(`yaml/${filename}`)
     .then(response => response.text());
 }
 
