@@ -6,6 +6,8 @@ gtfobins for cve's (work in progress)
 
 
 
+
+
 <table id="mytable">
 <thead>
 	<tr>
@@ -25,3 +27,57 @@ gtfobins for cve's (work in progress)
  	<!-- ...and so on -->
 </tbody>
 </table>
+
+
+<div id="table-filters">
+ 	<label for="filter-country">Country:</label>
+	<input type="text" id="filter-country" data-filter-col="3">
+</div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="filtable.js"></script>
+
+$('#mytable').filtable({ controlPanel: $('#table-filters') });
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
