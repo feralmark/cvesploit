@@ -2,7 +2,7 @@
 
 
 
-
+<!--
 
 
 <table id="mytable">
@@ -21,7 +21,12 @@
  		<td>Springfield</td>
  		<td>USA</td>
  	</tr>
+  
  	<!-- ...and so on -->
+
+<!--
+
+  
 </tbody>
 </table>
 
@@ -39,7 +44,7 @@
 
 $('#mytable').filtable({ controlPanel: $('#table-filters') });
 
- 
+--> 
 
 
 
